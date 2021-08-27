@@ -19,7 +19,7 @@ router.post('/login', async(req,res) => {
         if(!pass_verify){
             return res.status(404).send("Invalid Password");
         }
-        res.status(200).send("Login Successful")
+        res.status(200).json({"message":"Login Successful"})
 
     }catch(err){
         res.status(404).send(err);
@@ -30,9 +30,11 @@ router.post('/login', async(req,res) => {
 router.post('/signup', async(req,res) => {
     try {
         //Check Admin Already Exist or not
-        const email = res.body.email;
+        const email = req.body.email;
         const admin_user = await admin.findOne ({ email :email })
-        if(email) {return res.status(400).send("Admin Already Exist! ")}
+        if(email) {
+            return res.status(400).json({"message":"Admin Already Exist! "})
+        }
 
         //Create a New admin
         newAdmin = new admin(req.body);
@@ -43,22 +45,22 @@ router.post('/signup', async(req,res) => {
 
         //Save the data
         const data = await admin.save();
-        return res.status(200).send(data, 'SignUp Successfully')
+        return res.status(200).json({"message": "SignUp Successfully"})
 
-    } catch (err) {
+    }catch (err) {
         res.status(404).send(err);
     }
 });
 
 //Free all the bookings
-router.post('/remove', async(req, res) => {
+router.post('/reset', async(req, res) => {
     try{
         await ticket.updateMany({}, {
             $set:{
                 available: false
             }
         });
-        return re.status(200).send('Now all seats are available')
+        return res.status(200).json({"message": "Now all seats are available"})
     }catch(err) {
         res.status(404).send(err);
     }
