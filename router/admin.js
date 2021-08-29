@@ -11,13 +11,13 @@ router.post('/login', async(req,res) => {
         //Validate Email
         const admin_user = await admin.findOne ({email:req.body.email});
         if(!admin_user){
-            return res.status(404).send("Invalid Email")
+            return res.status(404).send("Invalid information")
         }
 
         //Validate Password
         const pass_verify = await bcrypt.compare(req.body.password, admin_user.password);
         if(!pass_verify){
-            return res.status(404).send("Invalid Password");
+            return res.status(404).send("Invalid Information");
         }
         res.status(200).json({"message":"Login Successful"})
 
@@ -32,10 +32,10 @@ router.post('/signup', async(req,res) => {
         //Check Admin Already Exist or not
         const email = req.body.email;
         const admin_user = await admin.findOne ({ email :email })
-        if(email) {
+        if(admin_user) {
             return res.status(400).json({"message":"Admin Already Exist! "})
         }
-
+        
         //Create a New admin
         newAdmin = new admin(req.body);
 
@@ -44,7 +44,7 @@ router.post('/signup', async(req,res) => {
         newAdmin.password = await bcrypt.hash(newAdmin.password, salt);
 
         //Save the data
-        const data = await admin.save();
+        const data = await newAdmin.save();
         return res.status(200).json({"message": "SignUp Successfully"})
 
     }catch (err) {
