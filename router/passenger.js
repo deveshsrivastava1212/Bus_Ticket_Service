@@ -27,7 +27,7 @@ router.get('/:ticketId', async(req, res) => {
         return res.status(404).json({"message": "passenger is not found"})
 
     } catch (err) {
-        res.send(404).send(err);
+        res.send(404).json({"error": "Oops! Something is wrong in your code"});
     }
 })
 
