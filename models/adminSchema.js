@@ -5,7 +5,10 @@ const Admin_Schema = new mongoose.Schema({
         type:Boolean,
         required: true
     },
-
+    name: {
+        type: String,
+        required: true
+    },
     email:{
         type: String,
         required: true

@@ -8,7 +8,7 @@ const router = express.Router();
 //Book the ticket
 router.post("/create", async (req, res) => {
   try {
-    //check seatId is valid
+    //check seatId is valid 
     const seat = parseInt(req.body.seatNo);
     if (seat > 40) {
       return res
