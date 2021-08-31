@@ -8,7 +8,7 @@ const router = express.Router();
 //Book the ticket
 router.post("/create", async (req, res) => {
   try {
-    //check seatId is valid 
+    //check seatId is valid
     const seat = parseInt(req.body.seatNo);
     if (seat > 40) {
       return res
@@ -52,7 +52,7 @@ router.post("/create", async (req, res) => {
 router.get("/allopen", async (req, res) => {
   try {
     const openTicket = await ticket.find({
-      available: false,
+      available: true,
     });
     return res.status(200).send(openTicket);
   } catch (err) {
@@ -63,41 +63,54 @@ router.get("/allopen", async (req, res) => {
 //View all Closed Ticket
 router.get("/allclose", async (req, res) => {
   try {
-    const closeTicket = await ticket.find({
-      available: true,
-    });
+    const closeTicket = await ticket
+      .find(
+        {
+          available: false,
+        },
+        {
+          seatNo: 1,
+        }
+      )
+      .populate("passengerObj", {
+        name: 1,
+      });
     res.status(200).send(closeTicket);
-  } catch (err) {}
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 //View Ticket status
-router.get('/:ticketId', async(req,res) => {
+router.get("/:ticketId", async (req, res) => {
   try {
     //pass the parameter as the ticket _id
-    const {ticketId} = req.body.params;
-    const ticketData = await ticket.findById(ticketId);
+    const { ticketId } = req.params;
+    const ticketData = await ticket
+      .findById(ticketId)
+      .populate("passengerObj", {
+        name: 1,
+        email: 1,
+        sex: 1,
+      });
     //return the status if ticket is found
-    if(ticketData) {
+    if (ticketData) {
       return res
         .status(200)
-        .json({
-          available: ticketData.available
+
+        .send({
+          data: ticketData,
         });
-    }
-    else {  
-      return res
-        .status(404)
-        .json({
-          "message" : "Ticket Id is wrong, page not found"
-        })
+    } else {
+      return res.status(404).json({
+        message: "Ticket Id is wrong, page not found",
+      });
     }
   } catch (err) {
-      console.log(err);
-      return res
-        .status(404)
-        .json({"error": "Something is wrong in your code"})
+    console.log(err);
+    return res.status(404).json({ error: "Something is wrong in your code" });
   }
-})
+});
 
 //Update the status of ticket
 router.put('/:ticketId', async(req, res) => {
@@ -129,5 +142,29 @@ router.put('/:ticketId', async(req, res) => {
     res.status(403).send("Unkown error", err);
   }
 })
+
+//Update passenger detail by getting the PassengerId
+// router.put('/:passengerId', async (req, res) => {
+//   try{
+
+//     const {passengerId} = req.params;
+//     await ticket.findOne({passengerId: passengerObj})
+//     const passengerData = await passenger.findByIdAndUpdate(
+//       passengerId, 
+//       {$set: req.body.passenger},
+//       {new: true}
+//     );
+//     if(passengerData) {
+//       res.status(200).json({ message: "Details updated successfully" });
+//     }
+//     else{
+//       return res.status(404)
+//                 .json({message: "Updation Failed"});
+//     }
+//   } catch (err) {
+//     console.log(err);
+//     res.status(403).send("Unkown error", err);
+//   }
+// });
 
 module.exports = router;
