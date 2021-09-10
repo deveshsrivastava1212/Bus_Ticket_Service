@@ -11,13 +11,13 @@ router.post('/login', async(req,res) => {
         //Validate Email
         const admin_user = await admin.findOne ({email:req.body.email});
         if(!admin_user){
-            return res.status(404).send("Invalid information")
+            return res.status(200).send("Invalid information")
         }
 
         //Validate Password
         const pass_verify = await bcrypt.compare(req.body.password, admin_user.password);
         if(!pass_verify){
-            return res.status(404).send("Invalid Information");
+            return res.status(200).send("Invalid Information");
         }
         res.status(200).json({"message":"Login Successful"})
 
@@ -28,6 +28,7 @@ router.post('/login', async(req,res) => {
 
 //SignUp as Admin
 router.post('/signup', async(req,res) => {
+    console.log(req,res);
     try {
         //Check Admin Already Exist or not
         const email = req.body.email;
