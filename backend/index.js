@@ -6,6 +6,7 @@ const app = express();
 const admin = require('./router/admin');
 const ticket = require('./router/ticket');
 const passenger = require('./router/passenger');
+const cors=require("cors");
 
 require('./db/conn');
 
@@ -13,8 +14,8 @@ app.use(express.json());
 app.use('/api/admin', admin);
 app.use('/api/passenger', passenger);
 app.use('/api/ticket', ticket);
+app.use(cors())
 
-// const cors=require("cors");
 // const corsOptions ={
 //    origin:'*', 
 //    credentials:true,            //access-control-allow-credentials:true
