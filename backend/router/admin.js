@@ -11,7 +11,7 @@ router.post('/login', async(req,res) => {
         //Validate Email
         const admin_user = await admin.findOne ({email:req.body.email});
         if(!admin_user){
-            return res.status(200).send("Invalid information")
+            return res.status(200).send("Invalid Information")
         }
 
         //Validate Password

@@ -15,7 +15,8 @@ const Ticket_Schema = mongoose.Schema({
         required: true,
     },
     passengerObj : {
-        type: mongoose.Schema.Types.ObjectId, ref: 'Passenger'
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Passenger'
     }
 })
 

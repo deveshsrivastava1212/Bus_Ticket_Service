@@ -6,7 +6,7 @@ const app = express();
 const admin = require('./router/admin');
 const ticket = require('./router/ticket');
 const passenger = require('./router/passenger');
-const cors=require("cors");
+
 
 require('./db/conn');
 
@@ -14,7 +14,6 @@ app.use(express.json());
 app.use('/api/admin', admin);
 app.use('/api/passenger', passenger);
 app.use('/api/ticket', ticket);
-app.use(cors())
 
 // const corsOptions ={
 //    origin:'*', 
@@ -35,9 +34,9 @@ app.use(cors())
 //     res.send('ok');
 //   });
   
-  app.use((req, res) => {
-    res.set('Access-Control-Allow-Origin', '*');
-  });
+  // app.use((req, res) => {
+  //   res.set('Access-Control-Allow-Origin', '*');
+  // });
   
 
 app.listen(port, () => {
